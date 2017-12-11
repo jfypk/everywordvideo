@@ -1,0 +1,1 @@
+import subprocessimport osimport jsonfrom vidpy import Clip, Compositionfrom twython import Twythonwith open('creds.json') as infile:	creds = json.load(infile)APP_KEY = creds('APP_KEY')APP_SECRET = creds['APP_SECRET']OAUTH_TOKEN = creds['OAUTH_TOKEN']
