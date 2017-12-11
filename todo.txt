@@ -1,2 +1,4 @@
 1. Figure out how to get a URL from a search term from Youtube API
 2. Figure out parrish's everywordbot github
+3.      https://github.com/aparrish/everywordbot
+4.      
