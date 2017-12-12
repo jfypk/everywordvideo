@@ -1,1 +1,28 @@
-import subprocessimport osimport jsonfrom vidpy import Clip, Compositionfrom twython import Twythonwith open('creds.json') as infile:	creds = json.load(infile)APP_KEY = creds('APP_KEY')APP_SECRET = creds['APP_SECRET']OAUTH_TOKEN = creds['OAUTH_TOKEN']OAUTH_TOKEN_SECRET = creds['OAUTH_TOKEN_SECRET']twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)#change this with the proper shell command for youtubesubprocess.call(['ffmpeg', '-f', 'avfoundation', '-pixel_format', '-yuyv422', '-framerate', '30', '-video_size', '1280x720', '-i', '0:0', '-t', '00:00:10', '-y', 'webcamrecord.mp4'])clips=[]for i in range(0, 10):	clip = Clip('webcamrecord.mp4', start=i, end = i+1, offset=i*0.4)	clip.opacity(0.3)	clips.append(clip)comp = Composition(clips, bgcolor = 'red')comp.save('creeper.mp4')videodata = open('creeper.mp4', 'rb')response = twitter.upload_video(media=videodata, media_type='video/mp4')media_id = response['media_id']twitter.update_status(status="Automated webcam portrait", media_ids=[media_id])os.remove('creeper.mp4')
+import json
+import youtubesearch
+from vidpy import Clip, Composition
+from twython import Twython
+
+with open('creds.json') as infile:
+    creds = json.load(infile)
+
+APP_KEY = creds["APP_KEY"]
+APP_SECRET = creds['APP_SECRET']
+OAUTH_TOKEN = creds['OAUTH_TOKEN']
+OAUTH_TOKEN_SECRET = creds['OAUTH_TOKEN_SECRET']
+
+twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
+
+wordFile = open("words.txt", "r")
+searchTerm = wordFile.readlines()
+
+resultVidID = youtubesearch.youtube_search(results=1, query=searchTerm[0])
+
+youtubeLink = "https://www.youtube.com/watch?v=" + resultVidID
+
+twitter.update_status(status=searchTerm[0] + "\n" + youtubeLink)
+
+with open('words.txt', 'r') as fin:
+    data = fin.read().splitlines(True)
+with open('words.txt', 'w') as fout:
+    fout.writelines(data[1:])
